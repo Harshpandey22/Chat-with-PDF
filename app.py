@@ -57,7 +57,7 @@ def get_conversational_rag_chain(retriever_chain):
     llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
     
     prompt = ChatPromptTemplate.from_messages([
-        ("system", "Answer the user's questions based on the below context: If you cannot find relevant context use google to get most relevant answers:\n\n{context}"),
+        ("system", "Answer the user's questions based on the below context: If you cannot find relevant context use google to get most relevant context and generate answers:\n\n{context}"),
         MessagesPlaceholder(variable_name="chat_history"),
         ("user", "{input}"),    
     ])
@@ -192,8 +192,8 @@ if pdf is None:
                     """)
         st.markdown("""
             #### 🚀 **Getting Started**
-            1. Upload your PDF file using the sidebar on the left.
-            2. Start typing your questions in the chatbox below.
+            1. Upload your PDF file.
+            2. Type your desired question.
             3. Receive instant, context-aware responses from our AI-powered chatbot.
         """)
           
@@ -201,7 +201,7 @@ if pdf is None:
         st.markdown("""
             #### 🎯 **Instructions**:
             1. Use the sidebar to upload your PDF file.
-            2. After uploading the PDF, you can interact with chatbot.
+            2. Only One PDF can be uploaded at a time. 
             3. You can type your questions or queries in the chatbox below.
             4. The bot will provide answers based on the content of the uploaded PDF. 
         """)
