@@ -7,3 +7,4 @@ PyPDF2
 dotenv
 langchain-google-genai
 streamlit==1.9.0
+python==3.9
