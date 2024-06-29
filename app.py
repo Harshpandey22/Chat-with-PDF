@@ -59,7 +59,7 @@ def get_conversational_rag_chain(retriever_chain):
     prompt = ChatPromptTemplate.from_messages([
         ("system", "Answer the user's questions based on the below context: If you cannot find relevant context use google to get most relevant answers:\n\n{context}"),
         MessagesPlaceholder(variable_name="chat_history"),
-        ("user", "{input}"),
+        ("user", "{input}"),    
     ])
     
     stuff_documents_chain = create_stuff_documents_chain(llm, prompt)
@@ -80,7 +80,7 @@ def get_response(user_input):
 def wrap_text(text, max_width=80):
     return '<br>'.join(textwrap.wrap(text, max_width))
 
-st.set_page_config(page_title="ChatPDF", page_icon="📚", layout="wide")
+st.set_page_config(page_title="ChatPDF", page_icon="💬", layout="wide")
 
 # Updated CSS for dynamic message boxes
 st.markdown("""
@@ -143,11 +143,11 @@ body {
     word-wrap: break-word;
 }
 .chat-message.user .message-content {
-    background: linear-gradient(#9D50BB, #6E48AA);
+    background: linear-gradient(to bottom left, #09203f, #537895);
     color: #ffffff;
 }
 .chat-message.bot .message-content {
-    background: linear-gradient(to bottom right, #09203f, #537895);
+    background: linear-gradient(to top right,#000428, #004e92);
     color: #ffffff;
 }
 .message-container {
@@ -166,27 +166,51 @@ body {
 </style>
 """, unsafe_allow_html=True)
 
-st.title("Chat with PDF 📚")
+st.title("Chat with PDF 🗣️📑")
 
 with st.sidebar:
-    st.header("Settings")
-    pdf = st.file_uploader("Upload your PDF", type="pdf")
+    st.header("Upload here ⬇️")
+    pdf = st.file_uploader("", type="pdf")
 
 if pdf is None:
-    st.markdown("""
-        ###
-        Upload a PDF file using the sidebar on the left to start chatting!                
-    """)
-    st.markdown("""
-        #### Instructions:
+    left_column, right_column = st.columns(2)
+
+    with left_column:
+        #st.markdown("Upload a PDF and start chatting!")
+        st.markdown("""
+            #### 💡 **Why ChatPDF ?**
+            1. Targeted Information: Extracts precise, context-relevant details from uploaded PDFs.
+            2. Quick Responses: Provides fast, accurate answers tailored to your documents.
+            3. Easy to Use: Features an intuitive, user-friendly interface.
+            4. Ideal for Researchers: Perfect for students and researchers needing instant, detailed information.
+            """)
+        st.markdown("""
+            #### 📚 **Features**
+            1. Get instant answers to your queries.
+            2. Enjoy a seamless and interactive document exploration.
+            3. Enhance your learning and productivity.
+                    """)
+        st.markdown("""
+            #### 🚀 **Getting Started**
+            1. Upload your PDF file using the sidebar on the left.
+            2. Start typing your questions in the chatbox below.
+            3. Receive instant, context-aware responses from our AI-powered chatbot.
+        """)
+          
+    with right_column:
+        st.markdown("""
+            #### 🎯 **Instructions**:
             1. Use the sidebar to upload your PDF file.
-            2. Once uploaded, type your questions or queries in the chatbox below.
-            3. The bot will provide answers based on the content of the uploaded PDF.
-    """)
-    st.markdown("""
-                ####
-                Feel free to explore and interact with your documents like never before!
-                """)
+            2. After uploading the PDF, you can interact with chatbot.
+            3. You can type your questions or queries in the chatbox below.
+            4. The bot will provide answers based on the content of the uploaded PDF. 
+        """)
+        st.markdown("""
+            #### 🤖 **Support:**
+            For any assistance, you can contact me
+            1. Email: harshpandey2289@gmail.com   
+            2. Phone No: 8874328862
+            """)
 
 else:
     if "chat_history" not in st.session_state:
