@@ -1,9 +1,6 @@
 streamlit
-langchain
-langchain-community
-langchain-core  
+langchain 
 langchain-huggingface
 PyPDF2
-dotenv
-langchain-google-genai
-streamlit==1.9.0
+python-dotenv
+langchain
