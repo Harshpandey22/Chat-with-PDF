@@ -1,0 +1,10 @@
+streamlit
+langchain
+langchain-community
+langchain-core  
+langchain-huggingface
+PyPDF2
+dotenv
+langchain-google-genai
+streamlit==1.9.0
+protobuf~=3.19.0
