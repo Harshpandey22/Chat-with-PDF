@@ -3,4 +3,4 @@ langchain
 langchain-huggingface
 PyPDF2
 python-dotenv
-langchain
+langchain-community
