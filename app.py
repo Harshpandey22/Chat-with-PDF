@@ -270,7 +270,7 @@ else:
             st.session_state.chat_history.append(AIMessage(content=response))
         
         # Force a rerun to update the UI
-        st.experimental_rerun()
+        st.rerun()
 
 # Add a footer
 st.markdown("""
