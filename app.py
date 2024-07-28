@@ -6,7 +6,6 @@ from langchain.vectorstores import FAISS
 from PyPDF2 import PdfReader
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
-from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
@@ -18,7 +17,6 @@ import time
 
 os.environ["GOOGLE_API_KEY"] = "AIzaSyDS7yo81FTHnivuZzno6EeXwgtLG9vrs44"
 
-load_dotenv()
 
 def load_lottie_file(filepath: str):
     with open(filepath, "r") as f:
