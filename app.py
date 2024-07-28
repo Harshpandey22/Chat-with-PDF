@@ -264,7 +264,7 @@ else:
         with st.spinner("Generating..."):
             response = get_response(user_query)
         st.session_state.chat_history.append(AIMessage(content=response))
-        st.experimental_rerun()
+        st.experimental_set_query_params(run=st.session_state.run + 1)
 
 # Add a footer
 st.markdown("""
