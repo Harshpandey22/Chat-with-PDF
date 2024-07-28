@@ -222,7 +222,7 @@ else:
 
     # Show the Lottie animation while processing
     with lottie_placeholder:
-        lottie_animation = load_lottie_file("C:/Users/harsh/Downloads/Animation - 1719938774459.json")
+        lottie_animation = load_lottie_file("Animation - 1719938774459.json")
         st_lottie(lottie_animation, speed=1, height=600, key="pdf_upload")
 
     if "chat_history" not in st.session_state:
