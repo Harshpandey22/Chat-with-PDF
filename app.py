@@ -12,10 +12,17 @@ from langchain.chains import create_history_aware_retriever, create_retrieval_ch
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_google_genai import ChatGoogleGenerativeAI
 import textwrap
+import json
+from streamlit_lottie import st_lottie
+import time
 
 os.environ["GOOGLE_API_KEY"] = "AIzaSyDS7yo81FTHnivuZzno6EeXwgtLG9vrs44"
 
 load_dotenv()
+
+def load_lottie_file(filepath: str):
+    with open(filepath, "r") as f:
+        return json.load(f)
 
 def get_vectorstore_from_PDF(pdf):
     if pdf is not None:
@@ -38,7 +45,7 @@ def get_vectorstore_from_PDF(pdf):
     return vector_store
 
 def get_context_retriever_chain(vector_store):
-    llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
 
     retriever = vector_store.as_retriever()
     
@@ -54,10 +61,10 @@ def get_context_retriever_chain(vector_store):
     
 def get_conversational_rag_chain(retriever_chain): 
     
-    llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro")
+    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
     
     prompt = ChatPromptTemplate.from_messages([
-        ("system", "Answer the user's questions based on the below context: If you cannot find relevant context use google to get most relevant context and generate answers:\n\n{context}"),
+        ("system", "Answer the user's questions based on the below context: If you cannot find relevant context use google to get most relevant context:\n\n{context}"),
         MessagesPlaceholder(variable_name="chat_history"),
         ("user", "{input}"),    
     ])
@@ -147,7 +154,7 @@ body {
     color: #ffffff;
 }
 .chat-message.bot .message-content {
-    background: linear-gradient(to top right,#000428, #004e92);
+    background: linear-gradient(to top right, #000428, #004e92);
     color: #ffffff;
 }
 .message-container {
@@ -176,7 +183,6 @@ if pdf is None:
     left_column, right_column = st.columns(2)
 
     with left_column:
-        #st.markdown("Upload a PDF and start chatting!")
         st.markdown("""
             #### 💡 **Why ChatPDF ?**
             1. Targeted Information: Extracts precise, context-relevant details from uploaded PDFs.
@@ -213,14 +219,25 @@ if pdf is None:
             """)
 
 else:
+    # Create a placeholder for the Lottie animation
+    lottie_placeholder = st.empty()
+
+    # Show the Lottie animation while processing
+    with lottie_placeholder:
+        lottie_animation = load_lottie_file("C:/Users/harsh/Downloads/Animation - 1719938774459.json")
+        st_lottie(lottie_animation, speed=1, height=600, key="pdf_upload")
+
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = [
             AIMessage(content="Hello, I am a bot. How can I help you?"),
         ]
     if "vector_store" not in st.session_state:
-        with st.spinner("Processing PDF..."):
-            st.session_state.vector_store = get_vectorstore_from_PDF(pdf)    
+        #with st.spinner("Processing PDF..."):
+            st.session_state.vector_store = get_vectorstore_from_PDF(pdf)
     
+    # Clear the Lottie animation once processing is complete
+    lottie_placeholder.empty()
+
     chat_container = st.container()
     with chat_container:
         for message in st.session_state.chat_history:
@@ -258,7 +275,7 @@ st.markdown("""
             margin: 0; 
             font-size: 1em; 
             color: #ffffff;
-            animation: heartbeat 1.5s infinite;">
+            animation: heartbeat 1.5s infinite;">    
             Developed by Harsh Pandey
     </p>
 </div>
