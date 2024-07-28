@@ -17,7 +17,6 @@ import time
 
 os.environ["GOOGLE_API_KEY"] = "AIzaSyDS7yo81FTHnivuZzno6EeXwgtLG9vrs44"
 
-
 def load_lottie_file(filepath: str):
     with open(filepath, "r") as f:
         return json.load(f)
@@ -85,6 +84,29 @@ def get_response(user_input):
 def wrap_text(text, max_width=80):
     return '<br>'.join(textwrap.wrap(text, max_width))
 
+def render_chat_history():
+    chat_container = st.container()
+    with chat_container:
+        for message in st.session_state.chat_history:
+            if isinstance(message, HumanMessage):
+                st.markdown(f"""
+                    <div class="chat-message user fade-in">
+                        <div class="message-container">
+                            <div class="message-content">{message.content}</div>
+                        </div>
+                        <div class="avatar"><i class="fas fa-user"></i></div>
+                    </div>
+                """, unsafe_allow_html=True)
+            elif isinstance(message, AIMessage):
+                st.markdown(f"""
+                    <div class="chat-message bot fade-in">
+                        <div class="avatar"><i class="fas fa-robot"></i></div>
+                        <div class="message-container">
+                            <div class="message-content">{message.content}</div>
+                        </div>
+                    </div>
+                """, unsafe_allow_html=True)
+
 st.set_page_config(page_title="ChatPDF", page_icon="💬", layout="wide")
 
 # Updated CSS for dynamic message boxes
@@ -111,7 +133,7 @@ body {
     padding: 20px;
 }
 .chat-message {
-    display: flex;
+    display: flex;   
     align-items: flex-start;
     margin-bottom: 1rem;
     padding: 0.5rem;
@@ -230,41 +252,25 @@ else:
             AIMessage(content="Hello, I am a bot. How can I help you?"),
         ]
     if "vector_store" not in st.session_state:
-        #with st.spinner("Processing PDF..."):
-            st.session_state.vector_store = get_vectorstore_from_PDF(pdf)
+        st.session_state.vector_store = get_vectorstore_from_PDF(pdf)
     
     # Clear the Lottie animation once processing is complete
     lottie_placeholder.empty()
 
-    chat_container = st.container()
-    with chat_container:
-        for message in st.session_state.chat_history:
-            if isinstance(message, HumanMessage):
-                st.markdown(f"""
-                    <div class="chat-message user fade-in">
-                        <div class="message-container">
-                            <div class="message-content">{message.content}</div>
-                        </div>
-                        <div class="avatar"><i class="fas fa-user"></i></div>
-                    </div>
-                """, unsafe_allow_html=True)
-            elif isinstance(message, AIMessage):
-                st.markdown(f"""
-                    <div class="chat-message bot fade-in">
-                        <div class="avatar"><i class="fas fa-robot"></i></div>
-                        <div class="message-container">
-                            <div class="message-content">{message.content}</div>
-                        </div>
-                    </div>
-                """, unsafe_allow_html=True)
+    render_chat_history()
 
     user_query = st.chat_input("Type your message here...", key="user_input")
     if user_query:
-        st.session_state.chat_history.append(HumanMessage(content=user_query))
         with st.spinner("Generating..."):
+            # Append user query
+            st.session_state.chat_history.append(HumanMessage(content=user_query))
+            
+            # Generate and append bot response
             response = get_response(user_query)
-        st.session_state.chat_history.append(AIMessage(content=response))
-        st.experimental_set_query_params(run=st.session_state.run + 1)
+            st.session_state.chat_history.append(AIMessage(content=response))
+        
+        # Force a rerun to update the UI
+        st.experimental_rerun()
 
 # Add a footer
 st.markdown("""
